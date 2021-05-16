@@ -11,43 +11,50 @@ import { Product } from './product/product';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  @Input() editName: string = '';
-  @Input() editDescr: string = '';
+  // @Input() editName: string = '';
+  // @Input() editDescr: string = '';
+  // 不用@Input()******************************
+  editName: string = '';
+  editDescr: string = '';
 
   showUpdate: boolean = false;
 
-  productList$: Observable<Object>;
+  // productList$: Observable<Object>;
   productList: Product[] = [];
   prodIndex: number;
 
   constructor(private router: Router, private dataService: DataService) {}
 
   ngOnInit() {
-    this.productList$ = this.dataService.getProducts$().pipe(
-      tap((p: any[]) => {
-        p.forEach(item => {
-          const product: Product = {
-            productName: item.productName,
-            productDescription: item.productDescription
-          };
-          this.productList.push(product);
-        });
-      })
-    );
-
-    this.productList$.subscribe();
-  }
-
-  getProd() {
-    this.productList$.subscribe();
-    // this.prodDataList$.subscribe((res:any)=>{
-
-    // },
-    // (err: Error) => {
-    //   console.error(err)
-    // }
+    // RxJS用的越簡單越好懂******************************
+    // this.productList$ = this.dataService.getProducts$().pipe(
+    //   tap((p: any[]) => {
+    //     p.forEach(item => {
+    //       const product: Product = {
+    //         productName: item.productName,
+    //         productDescription: item.productDescription
+    //       };
+    //       this.productList.push(product);
+    //     });
+    //   })
     // );
+
+    // this.productList$.subscribe();
+    this.dataService.getProducts$().subscribe((data: Product[]) => {
+      this.productList = data;
+    });
   }
+  // clean code ******************************
+  // getProd() {
+  //   this.productList$.subscribe();
+  // this.prodDataList$.subscribe((res:any)=>{
+
+  // },
+  // (err: Error) => {
+  //   console.error(err)
+  // }
+  // );
+  // }
 
   addProduct(inputRef: HTMLInputElement): void {
     const prod: Product = {
@@ -58,9 +65,9 @@ export class HomeComponent implements OnInit {
     inputRef.value = '';
   }
 
-  deleteProduct(index: number) {
-    // this.list.splice(index, 1);
-  }
+  // deleteProduct(index: number) {
+  // this.list.splice(index, 1);
+  // }
 
   remove(prod: Product) {
     const index: number = this.productList.indexOf(prod);
@@ -73,10 +80,10 @@ export class HomeComponent implements OnInit {
     if (this.prodIndex > index) {
       this.prodIndex--;
     }
-
-    if (this.productList.length == 0) {
-      this.showUpdate = false;
-    }
+    // 不必要的邏輯******************************
+    // if (this.productList.length == 0) {
+    //   this.showUpdate = false;
+    // }
   }
 
   editProduct(prod: Product) {
